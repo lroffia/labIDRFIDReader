@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<applicationProfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ApplicationProfile.xsd">
+  <parameters port="10123" url="127.0.0.1"/>
+  <namespaces>
+    <namespace prefix="rdf" suffix="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+    <namespace prefix="iot" suffix="http://www.arces.unibo.it#iot"/>
+  </namespaces>
+  <updates>
+    <update id="UPDATE_RFID_READING">
+    	<sparql><![CDATA[
+  		DELETE { ?resource iot:value ?oldValue }
+  		INSERT { ?resource iot:value ?value . ?resource rdf:type iot:RFID }
+  		WHERE { OPTIONAL { ?resource iot:value ?oldValue . ?resource rdf:type iot:RFID } }]]> 
+    </sparql>
+    <forcedBindings>
+        <binding  variable="?resource" value="iot:RFIDReader" type="uri" />
+        <binding  variable="?value" value="0" type="literal" />
+      </forcedBindings></update>
+  </updates>
+  <subscribes>
+    <subscribe id="SUBSCRIBE_RFID_READING">
+    	<sparql><![CDATA[
+  		SELECT ?resource ?value 
+  		WHERE { ?resource iot:value ?value . ?resource rdf:type iot:RFID }]]>     
+    </sparql>
+    <forcedBindings>
+        <binding type="literal" value="0" variable="?x"/>
+      </forcedBindings></subscribe>
+  </subscribes>
+</applicationProfile>
